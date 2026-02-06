@@ -116,9 +116,9 @@ function generateSVG(
   `).join('');
 
     return `
-<svg width="400" height="170" viewBox="0 0 400 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="400" height="195" viewBox="0 0 400 195" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="400" height="170" rx="10" fill="${colors.bg}" stroke="${colors.border}" stroke-width="1"/>
+  <rect width="400" height="195" rx="10" fill="${colors.bg}" stroke="${colors.border}" stroke-width="1"/>
   
   <!-- Donut Chart -->
   <g transform="translate(15, 15) rotate(-90, ${center}, ${center})">
@@ -134,6 +134,22 @@ function generateSVG(
   <g transform="translate(170, 15)">
     ${legendItems}
   </g>
+  
+  <!-- Footer -->
+  <line x1="10" y1="165" x2="390" y2="165" stroke="${colors.border}" stroke-width="1"/>
+  <a href="https://github.com/saurav-tiwari03" target="_blank">
+    <g transform="translate(90, 175)">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" fill="${colors.textSecondary}"/>
+    </g>
+    <text x="112" y="185" font-size="10" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif">GitHub</text>
+  </a>
+  <text x="200" y="185" font-size="10" fill="${colors.border}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="middle">•</text>
+  <a href="https://sauravdev.in?utm_source=github-stats" target="_blank">
+    <g transform="translate(235, 175)">
+      <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM1.5 8a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0zm7-3.5a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 0 .4.66l2.25 1.25a.75.75 0 1 0 .7-1.32L8.5 8.15V4.5z" fill="${colors.textSecondary}"/>
+    </g>
+    <text x="257" y="185" font-size="10" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif">Portfolio</text>
+  </a>
 </svg>
   `.trim();
 }
