@@ -66,7 +66,6 @@ interface LanguageStat {
 
 // Generate SVG card
 function generateSVG(
-    profile: GitHubUser,
     stats: LanguageStat[],
     theme: 'dark' | 'light' = 'dark'
 ): string {
@@ -76,16 +75,14 @@ function generateSVG(
     const colors = {
         bg: isDark ? '#0d1117' : '#ffffff',
         border: isDark ? '#30363d' : '#d0d7de',
-        headerBg: isDark ? '#161b22' : '#f6f8fa',
         text: isDark ? '#e6edf3' : '#1f2328',
         textSecondary: isDark ? '#8b949e' : '#656d76',
-        accent: '#58a6ff',
     };
 
     // Generate donut chart segments
-    const size = 120;
+    const size = 140;
     const center = size / 2;
-    const strokeWidth = 12;
+    const strokeWidth = 16;
     const radius = center - strokeWidth;
     const circumference = 2 * Math.PI * radius;
 
@@ -111,58 +108,32 @@ function generateSVG(
 
     // Generate legend items
     const legendItems = stats.slice(0, 6).map((stat, index) => `
-    <g transform="translate(0, ${index * 22})">
-      <circle cx="6" cy="6" r="5" fill="${stat.color}"/>
-      <text x="18" y="10" font-size="11" fill="${colors.text}" font-family="Segoe UI, Ubuntu, sans-serif">${stat.name}</text>
-      <text x="230" y="10" font-size="11" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="end">${stat.percent.toFixed(1)}%</text>
+    <g transform="translate(0, ${index * 24})">
+      <circle cx="6" cy="8" r="6" fill="${stat.color}"/>
+      <text x="20" y="12" font-size="13" fill="${colors.text}" font-family="Segoe UI, Ubuntu, sans-serif">${stat.name}</text>
+      <text x="220" y="12" font-size="13" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="end">${stat.percent.toFixed(1)}%</text>
     </g>
   `).join('');
 
-    const totalKB = stats.reduce((acc, curr) => acc + curr.value, 0);
-
     return `
-<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .title { font: 600 14px 'Segoe UI', Ubuntu, sans-serif; }
-    .subtitle { font: 400 11px 'Segoe UI', Ubuntu, sans-serif; }
-    .stat-label { font: 400 10px 'Segoe UI', Ubuntu, sans-serif; }
-  </style>
-  
+<svg width="400" height="170" viewBox="0 0 400 170" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="400" height="200" rx="8" fill="${colors.bg}" stroke="${colors.border}" stroke-width="1"/>
-  
-  <!-- Header -->
-  <rect width="400" height="50" rx="8" fill="${colors.headerBg}"/>
-  <rect y="42" width="400" height="8" fill="${colors.headerBg}"/>
-  <line x1="0" y1="50" x2="400" y2="50" stroke="${colors.border}" stroke-width="1"/>
-  
-  <!-- Avatar -->
-  <clipPath id="avatarClip">
-    <circle cx="32" cy="25" r="16"/>
-  </clipPath>
-  <image href="${profile.avatar_url}" x="16" y="9" width="32" height="32" clip-path="url(#avatarClip)"/>
-  
-  <!-- Title -->
-  <text x="58" y="22" class="title" fill="${colors.text}">${escapeXml(profile.name || profile.login)}</text>
-  <text x="58" y="38" class="subtitle" fill="${colors.textSecondary}">@${escapeXml(profile.login)} • ${profile.public_repos} repos • ${totalKB.toLocaleString()} KB</text>
+  <rect width="400" height="170" rx="10" fill="${colors.bg}" stroke="${colors.border}" stroke-width="1"/>
   
   <!-- Donut Chart -->
-  <g transform="translate(30, 65) rotate(-90, ${center}, ${center})">
+  <g transform="translate(15, 15) rotate(-90, ${center}, ${center})">
     <circle cx="${center}" cy="${center}" r="${radius}" fill="transparent" stroke="${colors.border}" stroke-width="${strokeWidth}"/>
     ${donutSegments}
   </g>
   
   <!-- Chart Center Label -->
-  <text x="90" y="128" font-size="18" font-weight="bold" fill="${colors.text}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="middle">${stats.length}</text>
-  <text x="90" y="142" font-size="8" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="middle">LANGS</text>
+  <text x="85" y="82" font-size="24" font-weight="bold" fill="${colors.text}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="middle">${stats.length}</text>
+  <text x="85" y="100" font-size="10" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="middle">LANGS</text>
   
   <!-- Legend -->
-  <g transform="translate(160, 62)">
+  <g transform="translate(170, 15)">
     ${legendItems}
   </g>
-  
-  <!-- Footer -->
-  <text x="390" y="190" font-size="9" fill="${colors.textSecondary}" font-family="Segoe UI, Ubuntu, sans-serif" text-anchor="end">github-stats</text>
 </svg>
   `.trim();
 }
@@ -261,7 +232,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // Generate SVG
-        const svg = generateSVG(profile, topStats, theme);
+        const svg = generateSVG(topStats, theme);
 
         // Set cache headers (cache for 4 hours)
         res.setHeader('Cache-Control', 's-maxage=14400, stale-while-revalidate');
